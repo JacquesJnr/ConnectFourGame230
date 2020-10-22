@@ -6,10 +6,11 @@ using namespace std;
 
 const int WIDTH = 7;
 const int HEIGHT = 6;
-int columnArray[WIDTH] = {};
+char columnArray[WIDTH] = {};
 char rowArray[HEIGHT] = {};
 int playerNumber;
 bool gridUpdate = false;
+int placeToken;
 
 //Allows me to color the text
 void colorText() {
@@ -38,26 +39,46 @@ void displayGrid() {
 	int row_letter = 64; //In ASCII 64 represents "@", the character before A,B,C etc.
 	
 	cout << "  |1| |2| |3| |4| |5| |6| |7| \n";
-	cout << "  +-+-+-+-+-+-+-+-+-+-+-+-+-+\n";
+	cout << "  [                         ]\n";
 
-	for (w = 0; w < HEIGHT; w++)
+	for (h = 0; h < HEIGHT; h++)
 	{
-		for (h = 0; h < WIDTH; h++) 
+		for (w = 0; w < WIDTH; w++) 
 		{
-			if (h == 0) {
+			if (w == 0) {
 				row_letter++;
 				cout << char(row_letter);
 			}
-			cout << " |" << "." << "|";
+			cout << " |" << columnArray[w] << "|";
 		}
 		cout << "\n";
 	}
-	cout << "  +-+-+-+-+-+-+-+-+-+-+-+-+-+\n";
+	cout << "  [_________________________]\n";
 	cout << "\n";
+	cout << "Empty = .\n";
 	cout << "Player 1 = X\n";
 	cout << "Player 2 = O\n";
 	cout << "\n";
 	cout << "\n";
+}
+
+void updateGrid(int tokenPos) {
+
+	int w;
+	int h;
+
+	for (h = 0; h < HEIGHT; h++) {
+		for (w = 0; w < WIDTH; w++) {
+			if (tokenPos > 0) {
+				columnArray[tokenPos-1] = 'X';
+			}
+			else
+			{
+				columnArray[tokenPos] = 'X';
+			}
+		}
+	}
+
 }
 
 // Checks which players turn it is and prompts their turn accordingly
@@ -104,6 +125,7 @@ void recieveInput(string desiredPosition) {
 		desiredColumn = (char)column_int;
 	}
 
+	placeToken = desiredColumn;
 	
 	cout << "\n";
 	cout << "You entered column: " << desiredColumn << "\n" << "CONTINUE? Y/N?" << endl;
@@ -122,6 +144,9 @@ char validateInput(char yesNo) {
 		cout << "Updating Grid\n";
 		system("cls");
 		gridUpdate = true;
+		cout << "GRID UPDATED...\n";
+		updateGrid(placeToken);
+		cout << "\n";
 		break;
 	}
 	case(78):
@@ -141,23 +166,11 @@ char validateInput(char yesNo) {
 	return yesNo;
 }
 
-void updateGrid() {
-	int i;
-	int j;
-
-	for (i = 0; i < WIDTH; i++) {
-		for (j = 0; j < HEIGHT; j++) {
-
-		}
-	}
-
-}
-
 // Does what it says on the tin
 void showTitle() {
-	cout << "{-------------------------------------}" << endl;
-	cout << "{          CONSOLE CONNECT 4          }" << endl;
-	cout << "{-------------------------------------} " << endl;
+	cout << "[-------------------------------------]" << endl;
+	cout << "[          CONSOLE CONNECT 4          ]" << endl;
+	cout << "[-------------------------------------] " << endl;
 	cout << "\n";
 	cout << "\n";
 }
@@ -181,7 +194,6 @@ int main()
 	} while (!gridUpdate);
 
 	gridUpdate = false;
-
 
 
 	system("pause");
