@@ -6,11 +6,11 @@ using namespace std;
 
 const int WIDTH = 7;
 const int HEIGHT = 6;
-char columnArray[WIDTH] = {};
-char rowArray[HEIGHT] = {};
+int gridArray[HEIGHT][WIDTH] = {};
 int playerNumber;
 bool gridUpdate = false;
-int placeToken;
+int placeToken = 0;
+int current_height = 5;
 
 //Allows me to color the text
 void colorText() {
@@ -34,26 +34,24 @@ void colorText() {
 //Displays the 6x7 Grid 
 void displayGrid() {
 
-	int w;
-	int h;
 	int row_letter = 64; //In ASCII 64 represents "@", the character before A,B,C etc.
 	
-	cout << "  |1| |2| |3| |4| |5| |6| |7| \n";
-	cout << "  [                         ]\n";
+	cout << " |1| |2| |3| |4| |5| |6| |7| \n";
+	cout << " [                         ]\n";
 
-	for (h = 0; h < HEIGHT; h++)
-	{
-		for (w = 0; w < WIDTH; w++) 
-		{
-			if (w == 0) {
-				row_letter++;
-				cout << char(row_letter);
+	for (int h = 0; h < HEIGHT; h++) {
+		for (int w = 0; w < WIDTH; w++) {
+			if (h > 0) {
+				if (w == 0) {
+					cout << endl;
+				}
 			}
-			cout << " |" << columnArray[w] << "|";
+			cout << " |" << gridArray[h][w] << "|";
 		}
-		cout << "\n";
 	}
-	cout << "  [_________________________]\n";
+
+	cout << "\n";
+	cout << " [_________________________]\n";
 	cout << "\n";
 	cout << "Empty = .\n";
 	cout << "Player 1 = X\n";
@@ -62,23 +60,31 @@ void displayGrid() {
 	cout << "\n";
 }
 
-void updateGrid(int tokenPos) {
+void updateGrid(int columnNumber) {
 
-	int w;
 	int h;
+	int w;
+	int my_array[WIDTH][HEIGHT];
 
 	for (h = 0; h < HEIGHT; h++) {
 		for (w = 0; w < WIDTH; w++) {
-			if (tokenPos > 0) {
-				columnArray[tokenPos-1] = 'X';
+			if (columnNumber > 0) {
+
+				if (gridArray[current_height][0] == 1) {
+					current_height--;
+				}
+				
+				gridArray[current_height][columnNumber -1] = 1;
 			}
 			else
 			{
-				columnArray[tokenPos] = 'X';
+				gridArray[current_height][columnNumber] = 1;
 			}
 		}
 	}
 
+	cout << current_height << endl;
+	cout << columnNumber << endl;
 }
 
 // Checks which players turn it is and prompts their turn accordingly
@@ -194,7 +200,6 @@ int main()
 	} while (!gridUpdate);
 
 	gridUpdate = false;
-
 
 	system("pause");
 	return 0;
