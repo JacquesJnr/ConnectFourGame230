@@ -219,26 +219,18 @@ void playerWin(playerInfo activePlayer) {
 	cout << endl << activePlayer.playerName << " Connected Four, You Win!" << endl;
 }
 
+int fullBoard(char board[][7])
+{
+	int full;
+	full = 0;
+	for (int i = 1; i <= 7; ++i)
+	{
+		if (board[1][i] != '*')
+			++full;
+	}
 
-//Allows me to color the text
-void colorText() {
-	HANDLE  hConsole;
-	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	int col = 12;
-
-	// color your text in Windows console mode
-	// colors are 0=black 1=blue 2=green and so on to 15=white  
-	// colorattribute = foreground + background * 16
-	// to get red text on yellow use 4 + 14*16 = 228
-	// light red on yellow would be 12 + 14*16 = 236
-
-	FlushConsoleInputBuffer(hConsole);
-	SetConsoleTextAttribute(hConsole, col);
-
-	cout << "Color Text\n";
-	SetConsoleTextAttribute(hConsole, 10);
+	return full;
 }
-
 
 // Does what it says on the tin
 void showTitle() {
@@ -292,6 +284,11 @@ int main()
 		displayGrid(board);
 		if (winCondition == 1) {
 			playerWin(P2);
+		}
+		drawCondition = fullBoard(board);
+		if (drawCondition == 7) {
+			cout << "The board is full, restarting" << endl;
+			//restart = 
 		}
 
 	} while (true);
