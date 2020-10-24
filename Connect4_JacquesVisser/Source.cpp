@@ -10,7 +10,8 @@ int gridArray[HEIGHT][WIDTH] = {};
 int playerNumber;
 bool gridUpdate = false;
 int placeToken = 0;
-int current_height = 5;
+int currentHeight = 6;
+string playerSting;
 
 //Allows me to color the text
 void colorText() {
@@ -60,36 +61,38 @@ void displayGrid() {
 	cout << "\n";
 }
 
+// Inserts the players token into the array
 void updateGrid(int columnNumber) {
+	cout << "GRID UPDATED...\n";
+	cout << "\n";
 
 	int h;
 	int w;
-	int my_array[WIDTH][HEIGHT];
+	//string my_array[WIDTH][HEIGHT];
 
 	for (h = 0; h < HEIGHT; h++) {
-		for (w = 0; w < WIDTH; w++) {
-			if (columnNumber > 0) {
 
-				if (gridArray[current_height][0] == 1) {
-					current_height--;
-				}
-				
-				gridArray[current_height][columnNumber -1] = 1;
-			}
-			else
-			{
-				gridArray[current_height][columnNumber] = 1;
-			}
+		if (gridArray[0][0] == NULL) {
+			currentHeight--;
+			cout << currentHeight << endl;
+			h = currentHeight;
 		}
+		for (w = 0; w < WIDTH; w++) {
+
+			gridArray[h][columnNumber -1] = 1;		
+		}		
 	}
 
-	cout << current_height << endl;
-	cout << columnNumber << endl;
+	recieveInput(playerSting);
+	cout  << "Height: " << currentHeight << endl;
+	cout << "Column: " << columnNumber << endl;
 }
 
 // Checks which players turn it is and prompts their turn accordingly
 void promptPlayer() { 
 	
+	int turnCount;
+
 	string welcome = "Hello! Welcome...";
 	string prompt = "ENTER YOUR TURN PLAYER ";
 
@@ -120,15 +123,14 @@ void promptPlayer() {
 //Takes the input of the current player
 void recieveInput(string desiredPosition) { 
 
-	//char desiredRow; ---- This is useless bc row is selected automatically
-	int desiredColumn;
-	size_t cascii;
-	size_t column_int;
+	int desiredColumn = 0;
+	size_t asciiNum;
+	size_t columnInt;
 
 	for (unsigned int i = 0; i < desiredPosition.length(); i++) {
-		cascii = desiredPosition.at(0);
-		column_int = (int)cascii - 48;
-		desiredColumn = (char)column_int;
+		asciiNum = desiredPosition.at(0);
+		columnInt = (int)asciiNum - 48;
+		desiredColumn = (char)columnInt;
 	}
 
 	placeToken = desiredColumn;
@@ -149,9 +151,7 @@ char validateInput(char yesNo) {
 	{
 		cout << "Updating Grid\n";
 		system("cls");
-		gridUpdate = true;
-		cout << "GRID UPDATED...\n";
-		updateGrid(placeToken);
+		gridUpdate = true;		
 		cout << "\n";
 		break;
 	}
@@ -181,6 +181,18 @@ void showTitle() {
 	cout << "\n";
 }
 
+class Game {
+private:
+	char myArray[HEIGHT][WIDTH] = {};
+
+public:
+
+	void generateGrid() {
+
+	}
+
+};
+
 int main()
 {
 	string dPos;
@@ -196,10 +208,12 @@ int main()
 		recieveInput(dPos);
 		cin >> my_option;
 		validateInput(my_option);
-		displayGrid();
 	} while (!gridUpdate);
-
 	gridUpdate = false;
+	
+
+
+	
 
 	system("pause");
 	return 0;
