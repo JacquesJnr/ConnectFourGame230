@@ -178,6 +178,7 @@ void YouWin(Players activePlayer)
 int restart(char board[][WIDTH])
 {
 	char restart;
+	int char_toInt;
 
 	cout << "Would you like to restart? Y / N: ";
 	cin >> restart;
@@ -186,22 +187,23 @@ int restart(char board[][WIDTH])
 	{
 	case (89):
 	case (121):
-		/*for (int h = 1; h <= 6; h++)
+		for (int h = 1; h <= 6; h++)
 		{
 			for (int w = 1; w <= 7; w++) {
 				board[h][w] = '.';
 			}
-		}*/
-		cout << "yes" << endl;
+		}
+		char_toInt = 1;
 			break;
 	case(78):
 	case(110):
 		cout << "Goodbye!" << endl;
+		char_toInt = 0;
 	default:
 		break;
 	}
 	
-	return restart;
+	return char_toInt;
 }
 
 int main()
@@ -270,8 +272,6 @@ int main()
 		}
 
 	} while (again != 2);
-
-
 
 	return 0;
 }
