@@ -32,6 +32,10 @@ int promptPlayer(char board[][WIDTH], Players activePlayer)
 		cout <<  "Hey, " <<activePlayer.playerName << ", " << "Please enter the column youd like to place your token 1 - 7: ";
 		cin >> playerInput;
 
+		if (playerInput < 1 || playerInput > WIDTH) {
+			cout << "That is an invalid column... \n";
+		}
+
 		while (board[1][playerInput] == 'X' || board[1][playerInput] == 'O')
 		{
 			cout << "That row is full, please enter a new row: ";
@@ -40,6 +44,9 @@ int promptPlayer(char board[][WIDTH], Players activePlayer)
 		}
 
 	} while (playerInput < 1 || playerInput > WIDTH);
+	cout << "\n";
+
+	
 
 	return playerInput;
 }
@@ -228,6 +235,7 @@ int main()
 	again = 0;
 	do
 	{
+		//Player 1
 		playerInput = promptPlayer(board, P1);
 		updateGrid(board, P1, playerInput);
 		system("cls");
@@ -237,6 +245,7 @@ int main()
 		win = validatePosition(board, P1);
 		if (win == 1)
 		{
+			//Player 1 win
 			YouWin(P1);
 			again = restart(board);
 			if (again >= 2)
@@ -245,7 +254,8 @@ int main()
 				system("exit");
 			}
 		}
-
+		
+		//Player 2
 		playerInput = promptPlayer(board, P2);
 		updateGrid(board, P2, playerInput);
 		system("cls");
@@ -255,6 +265,7 @@ int main()
 		win = validatePosition(board, P2);
 		if (win == 1)
 		{
+			//Player 2 win
 			YouWin(P2);
 			again = restart(board);
 			if (again >= 2)
@@ -264,6 +275,7 @@ int main()
 			}
 		}
 
+		// Draw
 		full = isBoardFull(board);
 		if (full == WIDTH)
 		{
