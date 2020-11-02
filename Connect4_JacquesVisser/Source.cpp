@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <windows.h>
+#include <sstream>
 using namespace std;
 
 struct Players
@@ -27,10 +27,17 @@ int promptPlayer(char board[][WIDTH], Players activePlayer)
 {
 	int playerInput;
 
+
 	do
 	{
 		cout <<  "Hey, " <<activePlayer.playerName << ", " << "Please enter the column youd like to place your token 1 - 7: ";
 		cin >> playerInput;
+
+		if (cin.fail())
+		{
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}
 
 		if (playerInput < 1 || playerInput > WIDTH) {
 			cout << "That is an invalid column... \n";
@@ -39,8 +46,7 @@ int promptPlayer(char board[][WIDTH], Players activePlayer)
 		while (board[1][playerInput] == 'X' || board[1][playerInput] == 'O')
 		{
 			cout << "That row is full, please enter a new row: ";
-			cin >> playerInput;
-					
+			cin >> playerInput;						
 		}
 
 	} while (playerInput < 1 || playerInput > WIDTH);
@@ -166,7 +172,7 @@ int isBoardFull(char board[][WIDTH])
 {
 	int full;
 	full = 0;
-	for (int i = 1; i <= 7; ++i)
+	for (int i = 1; i <= WIDTH; ++i)
 	{
 		if (board[1][i] != '.')
 			++full;
