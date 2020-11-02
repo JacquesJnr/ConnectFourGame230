@@ -23,6 +23,50 @@ void showTitle() {
 	cout << "\n";
 }
 
+//Ask the player if they'd like to play normal connect 4 or secondary objective connect 4
+int gameMode(string name1, string name2, int playerInput) {
+
+	int option_select = NULL;
+
+	cout << "Welcome " << name1 + " and " << name2 << ".\n\n";
+
+	cout << "  CHOOSE AN OPTION: \n";
+	
+	do {
+		cout << "|---------------------------------------------------------------------------------------|" << endl;
+		cout << "| 1: Play Normal Connect 4!                                                     |\n";
+		cout << "|---------------------------------------------------------------------------------------|" << endl;
+		cout << "| 2: Play Connect 4 with the option to remove pieces at the bottom of the board!|\n";
+		cout << "|---------------------------------------------------------------------------------------|" << endl;
+		cin >> playerInput;
+
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}
+
+		if (playerInput == 1) {
+			cout << "THATS A 1\n";
+			option_select = 1;
+		}
+		else if (playerInput == 2) {
+			cout << "THATS A 2\n";
+			option_select = 2;
+		}
+		else
+		{
+			cout << "That was an invalid answer... Input 1 or 2\n\n";
+			option_select == NULL;
+		}
+
+	} while (option_select == NULL);
+
+
+	system("cls");
+	showTitle();
+	return option_select;
+}
+
 // Asks the player for their input as long as the number is within range
 int promptPlayer(char board[][WIDTH], Players activePlayer)
 {
@@ -228,7 +272,7 @@ int main()
 {
 	Players P1, P2;
 	char board[HEIGHT][WIDTH];
-	int playerInput, win, full, again;
+	int mode, playerInput, win, full, again;
 
 	showTitle();
 	cout << "Player 1, please enter your name: ";
@@ -239,6 +283,10 @@ int main()
 	cin >> P2.playerName;
 	cout << endl;
 	P2.playerChar = 'O';
+
+	playerInput = 0;
+
+	gameMode(P1.playerName, P2.playerName, playerInput);
 	displayGrid(board);
 
 	full = 0;
