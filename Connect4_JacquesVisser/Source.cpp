@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <ctype.h>
 using namespace std;
 
 struct Players
@@ -51,8 +52,6 @@ int promptPlayer(char board[][WIDTH], Players activePlayer)
 
 	} while (playerInput < 1 || playerInput > WIDTH);
 	cout << "\n";
-
-	
 
 	return playerInput;
 }
@@ -191,32 +190,34 @@ void YouWin(Players activePlayer)
 int restart(char board[][WIDTH])
 {
 	char restart;
-	int char_toInt;
+	int my_int = NULL;
 
-	cout << "Would you like to restart? Y / N: ";
-	cin >> restart;
-	
-	switch (int(restart))
-	{
-	case (89):
-	case (121):
-		for (int h = 1; h <= 6; h++)
-		{
-			for (int w = 1; w <= 7; w++) {
-				board[h][w] = '.';
+	do {
+		cout << "Would you like to restart? Y / N: ";
+		cin >> restart;
+
+
+		if (isalpha(restart)) {
+
+			if (restart == 89 || restart == 121) {
+				my_int = 1;
+			}
+			else if (restart == 78 || restart == 110) {
+				my_int = 2;
+			}
+			else
+			{
+				cout << "That wasn't Y or N, try again... \n";
 			}
 		}
-		char_toInt = 1;
-			break;
-	case(78):
-	case(110):
-		cout << "Goodbye!" << endl;
-		char_toInt = 0;
-	default:
-		break;
-	}
+		else
+		{
+			cout << "I'm sorry, that's a number not a letter, please input Y or N: \n";
+		}		
+
+	} while (my_int == NULL);
 	
-	return char_toInt;
+	return my_int;
 }
 
 int main()
