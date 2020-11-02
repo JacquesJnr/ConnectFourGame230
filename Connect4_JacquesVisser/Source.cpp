@@ -196,6 +196,7 @@ int restart(char board[][WIDTH])
 		cout << "Would you like to restart? Y / N: ";
 		cin >> restart;
 
+		cin.ignore(restart, '\n');
 
 		if (isalpha(restart)) {
 
@@ -207,16 +208,19 @@ int restart(char board[][WIDTH])
 			}
 			else
 			{
+				my_int = NULL;
 				cout << "That wasn't Y or N, try again... \n";
 			}
 		}
 		else
 		{
 			cout << "I'm sorry, that's a number not a letter, please input Y or N: \n";
-		}		
+		}
 
 	} while (my_int == NULL);
-	
+
+	system("cls");
+	showTitle();
 	return my_int;
 }
 
@@ -227,7 +231,6 @@ int main()
 	int playerInput, win, full, again;
 
 	showTitle();
-	displayGrid(board);
 	cout << "Player 1, please enter your name: ";
 	cin >> P1.playerName;
 	cout << endl;
@@ -236,6 +239,7 @@ int main()
 	cin >> P2.playerName;
 	cout << endl;
 	P2.playerChar = 'O';
+	displayGrid(board);
 
 	full = 0;
 	win = 0;
@@ -274,7 +278,7 @@ int main()
 		{
 			//Player 2 win
 			YouWin(P2);
-			again = restart(board);
+			again = restart(board);			
 			if (again >= 2)
 			{
 				break;
