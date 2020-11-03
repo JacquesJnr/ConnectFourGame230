@@ -23,7 +23,18 @@ void showTitle() {
 	cout << "\n";
 }
 
-//Ask the player if they'd like to play normal connect 4 or secondary objective connect 4
+// Rules for Obkecive K
+void showRules() {
+
+	cout << "RULES:\n\n";
+	cout << "|----------------------------------------------------------------------------------------------------------|" << endl;
+	cout << "| 1: Take turns placing your tokens into the board using the numbers 1 - 7.                                |\n";
+	cout << "| 2: Tokens can be removed by typing a '-' before the column you wish to remove a token from.              |\n";
+	cout << "| 3: Tokens can only be removed from the bottom of the board if it is your token signed either 'X' or 'O'.|\n";
+	cout << "|----------------------------------------------------------------------------------------------------------|" << endl << endl;;
+}
+
+// Ask the player if they'd like to play normal connect 4 or objective K connect 4
 int gameMode(string name1, string name2, int playerInput) {
 
 	int option_select = NULL;
@@ -34,10 +45,11 @@ int gameMode(string name1, string name2, int playerInput) {
 	
 	do {
 		cout << "|---------------------------------------------------------------------------------------|" << endl;
-		cout << "| 1: Play Normal Connect 4!                                                     |\n";
+		cout << "| 1: Play normal Connect 4!                                                             |\n";
 		cout << "|---------------------------------------------------------------------------------------|" << endl;
-		cout << "| 2: Play Connect 4 with the option to remove pieces at the bottom of the board!|\n";
+		cout << "| 2: Play Connect 4 with the option to remove pieces!                                   |\n";
 		cout << "|---------------------------------------------------------------------------------------|" << endl;
+		cout << "Your Choice: ";
 		cin >> playerInput;
 
 		if (cin.fail()) {
@@ -46,11 +58,9 @@ int gameMode(string name1, string name2, int playerInput) {
 		}
 
 		if (playerInput == 1) {
-			cout << "THATS A 1\n";
 			option_select = 1;
 		}
 		else if (playerInput == 2) {
-			cout << "THATS A 2\n";
 			option_select = 2;
 		}
 		else
@@ -61,13 +71,12 @@ int gameMode(string name1, string name2, int playerInput) {
 
 	} while (option_select == NULL);
 
-
 	system("cls");
 	showTitle();
 	return option_select;
 }
 
-// Asks the player for their input as long as the number is within range
+// Asks for and accepts the players' turn
 int promptPlayer(char board[][WIDTH], Players activePlayer)
 {
 	int playerInput;
@@ -100,7 +109,7 @@ int promptPlayer(char board[][WIDTH], Players activePlayer)
 	return playerInput;
 }
 
-// Adds the player token to the array at thr chosen location
+// Adds the player token to the array at the chosen location
 void updateGrid(char board[][WIDTH], Players activePlayer, int playerInput)
 {
 	int length, turn;
@@ -285,64 +294,124 @@ int main()
 	P2.playerChar = 'O';
 
 	playerInput = 0;
-
-	gameMode(P1.playerName, P2.playerName, playerInput);
-	displayGrid(board);
-
 	full = 0;
 	win = 0;
 	again = 0;
-	do
+	mode = gameMode(P1.playerName, P2.playerName, playerInput);
+
+	displayGrid(board);
+
+	if (mode == 1) 
 	{
-		//Player 1
-		playerInput = promptPlayer(board, P1);
-		updateGrid(board, P1, playerInput);
-		system("cls");
-		showTitle();
-		cout << ">>>>>> " << P2.playerName << "'s Turn " << "<<<<<<<<" << "\n \n";
-		displayGrid(board);
-		win = validatePosition(board, P1);
-		if (win == 1)
+		do
 		{
-			//Player 1 win
-			YouWin(P1);
-			again = restart(board);
-			if (again >= 2)
+			//Player 1
+			playerInput = promptPlayer(board, P1);
+			updateGrid(board, P1, playerInput);
+			system("cls");
+			showTitle();
+			cout << ">>>>>> " << P2.playerName << "'s Turn " << "<<<<<<<<" << "\n \n";
+			displayGrid(board);
+			win = validatePosition(board, P1);
+			if (win == 1)
 			{
-				break;
-				system("exit");
+				//Player 1 win
+				YouWin(P1);
+				again = restart(board);
+				if (again >= 2)
+				{
+					break;
+					system("exit");
+				}
 			}
-		}
-		
-		//Player 2
-		playerInput = promptPlayer(board, P2);
-		updateGrid(board, P2, playerInput);
-		system("cls");
-		showTitle();
-		cout << ">>>>>> " << P1.playerName << "'s Turn " << "<<<<<<<<" << "\n \n";
-		displayGrid(board);
-		win = validatePosition(board, P2);
-		if (win == 1)
-		{
-			//Player 2 win
-			YouWin(P2);
-			again = restart(board);			
-			if (again >= 2)
+
+			//Player 2
+			playerInput = promptPlayer(board, P2);
+			updateGrid(board, P2, playerInput);
+			system("cls");
+			showTitle();
+			cout << ">>>>>> " << P1.playerName << "'s Turn " << "<<<<<<<<" << "\n \n";
+			displayGrid(board);
+			win = validatePosition(board, P2);
+			if (win == 1)
 			{
-				break;
-				system("exit");
+				//Player 2 win
+				YouWin(P2);
+				again = restart(board);
+				if (again >= 2)
+				{
+					break;
+					system("exit");
+				}
 			}
-		}
 
-		// Draw
-		full = isBoardFull(board);
-		if (full == WIDTH)
+			// Draw
+			full = isBoardFull(board);
+			if (full == WIDTH)
+			{
+				cout << "The board is full, it is a draw!" << endl;
+				again = restart(board);
+			}
+
+		} while (again != 2);
+	}
+	
+	if(mode == 2)
+	{
+		showRules();
+
+		do
 		{
-			cout << "The board is full, it is a draw!" << endl;
-			again = restart(board);
-		}
+			//Player 1
+			playerInput = promptPlayer(board, P1);
+			updateGrid(board, P1, playerInput);
+			system("cls");
+			showTitle();
+			cout << ">>>>>> " << P2.playerName << "'s Turn " << "<<<<<<<<" << "\n \n";
+			displayGrid(board);
+			win = validatePosition(board, P1);
+			if (win == 1)
+			{
+				//Player 1 win
+				YouWin(P1);
+				again = restart(board);
+				if (again >= 2)
+				{
+					break;
+					system("exit");
+				}
+			}
 
-	} while (again != 2);
+			//Player 2
+			playerInput = promptPlayer(board, P2);
+			updateGrid(board, P2, playerInput);
+			system("cls");
+			showTitle();
+			cout << ">>>>>> " << P1.playerName << "'s Turn " << "<<<<<<<<" << "\n \n";
+			displayGrid(board);
+			win = validatePosition(board, P2);
+			if (win == 1)
+			{
+				//Player 2 win
+				YouWin(P2);
+				again = restart(board);
+				if (again >= 2)
+				{
+					break;
+					system("exit");
+				}
+			}
 
+			// Draw
+			full = isBoardFull(board);
+			if (full == WIDTH)
+			{
+				cout << "The board is full, it is a draw!" << endl;
+				again = restart(board);
+			}
+
+		} while (again != 2);
+	}
+	
 	return 0;
 }
