@@ -23,60 +23,7 @@ void showTitle() {
 	cout << "\n";
 }
 
-// Rules for Obkecive K
-void showRules() {
-
-	cout << "RULES:\n\n";
-	cout << "|----------------------------------------------------------------------------------------------------------|" << endl;
-	cout << "| 1: Take turns placing your tokens into the board using the numbers 1 - 7.                                |\n";
-	cout << "| 2: Tokens can be removed by typing a '-' before the column you wish to remove a token from.              |\n";
-	cout << "| 3: Tokens can only be removed from the bottom of the board if it is your token signed either 'X' or 'O'.|\n";
-	cout << "|----------------------------------------------------------------------------------------------------------|" << endl << endl;;
-}
-
-// Ask the player if they'd like to play normal connect 4 or objective K connect 4
-int gameMode(string name1, string name2, int playerInput) {
-
-	int option_select = NULL;
-
-	cout << "Welcome " << name1 + " and " << name2 << ".\n\n";
-
-	cout << "  CHOOSE AN OPTION: \n";
-	
-	do {
-		cout << "|---------------------------------------------------------------------------------------|" << endl;
-		cout << "| 1: Play normal Connect 4!                                                             |\n";
-		cout << "|---------------------------------------------------------------------------------------|" << endl;
-		cout << "| 2: Play Connect 4 with the option to remove pieces!                                   |\n";
-		cout << "|---------------------------------------------------------------------------------------|" << endl;
-		cout << "Your Choice: ";
-		cin >> playerInput;
-
-		if (cin.fail()) {
-			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		}
-
-		if (playerInput == 1) {
-			option_select = 1;
-		}
-		else if (playerInput == 2) {
-			option_select = 2;
-		}
-		else
-		{
-			cout << "That was an invalid answer... Input 1 or 2\n\n";
-			option_select == NULL;
-		}
-
-	} while (option_select == NULL);
-
-	system("cls");
-	showTitle();
-	return option_select;
-}
-
-// Asks for and accepts the players' turn
+// Asks the player for their input as long as the number is within range
 int promptPlayer(char board[][WIDTH], Players activePlayer)
 {
 	int playerInput;
@@ -84,7 +31,7 @@ int promptPlayer(char board[][WIDTH], Players activePlayer)
 
 	do
 	{
-		cout <<  "Hey, " <<activePlayer.playerName << ", " << "Please enter the column youd like to place your token 1 - 7: ";
+		cout << "Hey, " << activePlayer.playerName << ", " << "Please enter the column youd like to place your token 1 - 7: ";
 		cin >> playerInput;
 
 		if (cin.fail())
@@ -100,7 +47,7 @@ int promptPlayer(char board[][WIDTH], Players activePlayer)
 		while (board[1][playerInput] == 'X' || board[1][playerInput] == 'O')
 		{
 			cout << "That row is full, please enter a new row: ";
-			cin >> playerInput;						
+			cin >> playerInput;
 		}
 
 	} while (playerInput < 1 || playerInput > WIDTH);
@@ -109,7 +56,7 @@ int promptPlayer(char board[][WIDTH], Players activePlayer)
 	return playerInput;
 }
 
-// Adds the player token to the array at the chosen location
+// Adds the player token to the array at thr chosen location
 void updateGrid(char board[][WIDTH], Players activePlayer, int playerInput)
 {
 	int length, turn;
@@ -165,7 +112,7 @@ int validatePosition(char board[][WIDTH], Players activePlayer)
 	currentChar = activePlayer.playerChar;
 	win = 0;
 
-	for (int h = 6; h >= 1; --h) 
+	for (int h = 6; h >= 1; --h)
 	{
 		for (int w = 7; w >= 1; --w) {
 
@@ -273,6 +220,15 @@ int restart(char board[][WIDTH])
 	} while (my_int == NULL);
 
 	system("cls");
+	for (int h = 1; h <= HEIGHT; h++)
+	{
+		for (int w = 1; w <= WIDTH; w++)
+		{
+			board[h][w] = '.';
+		}
+
+		cout << endl;
+	}
 	showTitle();
 	return my_int;
 }
@@ -281,7 +237,7 @@ int main()
 {
 	Players P1, P2;
 	char board[HEIGHT][WIDTH];
-	int mode, playerInput, win, full, again;
+	int playerInput, win, full, again;
 
 	showTitle();
 	cout << "Player 1, please enter your name: ";
@@ -292,126 +248,62 @@ int main()
 	cin >> P2.playerName;
 	cout << endl;
 	P2.playerChar = 'O';
+	displayGrid(board);
 
-	playerInput = 0;
 	full = 0;
 	win = 0;
 	again = 0;
-	mode = gameMode(P1.playerName, P2.playerName, playerInput);
-
-	displayGrid(board);
-
-	if (mode == 1) 
+	do
 	{
-		do
+		//Player 1
+		playerInput = promptPlayer(board, P1);
+		updateGrid(board, P1, playerInput);
+		system("cls");
+		showTitle();
+		cout << ">>>>>> " << P2.playerName << "'s Turn " << "<<<<<<<<" << "\n \n";
+		displayGrid(board);
+		win = validatePosition(board, P1);
+		if (win == 1)
 		{
-			//Player 1
-			playerInput = promptPlayer(board, P1);
-			updateGrid(board, P1, playerInput);
-			system("cls");
-			showTitle();
-			cout << ">>>>>> " << P2.playerName << "'s Turn " << "<<<<<<<<" << "\n \n";
-			displayGrid(board);
-			win = validatePosition(board, P1);
-			if (win == 1)
+			//Player 1 win
+			YouWin(P1);
+			again = restart(board);
+			if (again >= 2)
 			{
-				//Player 1 win
-				YouWin(P1);
-				again = restart(board);
-				if (again >= 2)
-				{
-					break;
-					system("exit");
-				}
+				break;
+				system("exit");
 			}
+		}
 
-			//Player 2
-			playerInput = promptPlayer(board, P2);
-			updateGrid(board, P2, playerInput);
-			system("cls");
-			showTitle();
-			cout << ">>>>>> " << P1.playerName << "'s Turn " << "<<<<<<<<" << "\n \n";
-			displayGrid(board);
-			win = validatePosition(board, P2);
-			if (win == 1)
-			{
-				//Player 2 win
-				YouWin(P2);
-				again = restart(board);
-				if (again >= 2)
-				{
-					break;
-					system("exit");
-				}
-			}
-
-			// Draw
-			full = isBoardFull(board);
-			if (full == WIDTH)
-			{
-				cout << "The board is full, it is a draw!" << endl;
-				again = restart(board);
-			}
-
-		} while (again != 2);
-	}
-	
-	if(mode == 2)
-	{
-		showRules();
-
-		do
+		//Player 2
+		playerInput = promptPlayer(board, P2);
+		updateGrid(board, P2, playerInput);
+		system("cls");
+		showTitle();
+		cout << ">>>>>> " << P1.playerName << "'s Turn " << "<<<<<<<<" << "\n \n";
+		displayGrid(board);
+		win = validatePosition(board, P2);
+		if (win == 1)
 		{
-			//Player 1
-			playerInput = promptPlayer(board, P1);
-			updateGrid(board, P1, playerInput);
-			system("cls");
-			showTitle();
-			cout << ">>>>>> " << P2.playerName << "'s Turn " << "<<<<<<<<" << "\n \n";
-			displayGrid(board);
-			win = validatePosition(board, P1);
-			if (win == 1)
+			//Player 2 win
+			YouWin(P2);
+			again = restart(board);
+			if (again >= 2)
 			{
-				//Player 1 win
-				YouWin(P1);
-				again = restart(board);
-				if (again >= 2)
-				{
-					break;
-					system("exit");
-				}
+				break;
+				system("exit");
 			}
+		}
 
-			//Player 2
-			playerInput = promptPlayer(board, P2);
-			updateGrid(board, P2, playerInput);
-			system("cls");
-			showTitle();
-			cout << ">>>>>> " << P1.playerName << "'s Turn " << "<<<<<<<<" << "\n \n";
-			displayGrid(board);
-			win = validatePosition(board, P2);
-			if (win == 1)
-			{
-				//Player 2 win
-				YouWin(P2);
-				again = restart(board);
-				if (again >= 2)
-				{
-					break;
-					system("exit");
-				}
-			}
+		// Draw
+		full = isBoardFull(board);
+		if (full == WIDTH)
+		{
+			cout << "The board is full, it is a draw!" << endl;
+			again = restart(board);
+		}
 
-			// Draw
-			full = isBoardFull(board);
-			if (full == WIDTH)
-			{
-				cout << "The board is full, it is a draw!" << endl;
-				again = restart(board);
-			}
+	} while (again != 2);
 
-		} while (again != 2);
-	}
-	
 	return 0;
 }
